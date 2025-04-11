@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, filedialog
 import threading
 import requests
 import os
@@ -7,15 +7,6 @@ import re
 from PyPDF2 import PdfMerger
 import img2pdf
 import tempfile
-
-# Constantes
-OUTPUT_PATH = os.path.join(os.path.dirname(__file__), "output")
-
-# Anime_Name avec '%20' pour l'URL, mais remplacement pour le nom du dossier
-# Anime_Name = "Chainsaw%20man"
-# Anime_Name = "Beastars"
-# Anime_Name = "Solo%20Leveling"
-# Anime_Name = "Demon%20Slayer"
 
 # Utilitaire pour éviter les caractères illégaux dans les noms de fichiers/dossiers Windows
 def sanitize_filename(name: str) -> str:
@@ -27,7 +18,7 @@ def downloadImg(url, imgName="", folder="") -> bool:
     if folder != "":
         imgPath = os.path.join(folder, imgName)
     else:
-        imgPath = os.path.join(OUTPUT_PATH, imgName)
+        imgPath = os.path.join("output", imgName)
 
     try:
         response = requests.get(url)
@@ -55,7 +46,7 @@ def convertImgToPdf(image_files, output="output.pdf"):
     merger.write(output)
     merger.close()
 
-def downloadAndCreatePdf(chapter_number, Anime_Name, Sanitized_Anime_Name, log_callback):
+def downloadAndCreatePdf(chapter_number, Anime_Name, Sanitized_Anime_Name, OUTPUT_PATH, log_callback):
     main_folder = os.path.join(OUTPUT_PATH, sanitize_filename(Sanitized_Anime_Name))
     if not os.path.exists(main_folder):
         os.makedirs(main_folder)
@@ -76,27 +67,35 @@ def downloadAndCreatePdf(chapter_number, Anime_Name, Sanitized_Anime_Name, log_c
 
     pdf_output_path = os.path.join(main_folder, f"chapitre_{chapter_number}.pdf")
     convertImgToPdf(image_files, output=pdf_output_path)
-    log_callback(f"PDF créé : {pdf_output_path}")
+    log_callback(f"✅ PDF créé : {pdf_output_path}")
 
     for img_file in os.listdir(main_folder):
         img_path = os.path.join(main_folder, img_file)
         if img_path.lower().endswith(('.png', '.jpeg', '.jpg')):
             os.remove(img_path)
-    log_callback(f"Images supprimées pour le chapitre {chapter_number}")
+    log_callback(f"🧹 Images supprimées pour le chapitre {chapter_number}")
 
-def downloadChaptersInRange(start_chapter, end_chapter, Anime_Name, Sanitized_Anime_Name, log_callback):
+def downloadChaptersInRange(start_chapter, end_chapter, Anime_Name, Sanitized_Anime_Name, OUTPUT_PATH, log_callback):
     for chapter_number in range(start_chapter, end_chapter + 1):
         try:
-            log_callback(f"\n--- Chapitre {chapter_number} ---")
-            downloadAndCreatePdf(chapter_number, Anime_Name, Sanitized_Anime_Name, log_callback)
+            log_callback(f"\n📘 --- Chapitre {chapter_number} ---")
+            downloadAndCreatePdf(chapter_number, Anime_Name, Sanitized_Anime_Name, OUTPUT_PATH, log_callback)
         except Exception as e:
-            log_callback(f"Erreur lors du chapitre {chapter_number} : {e}")
+            log_callback(f"❌ Erreur lors du chapitre {chapter_number} : {e}")
             break
 
 # Interface graphique
 root = tk.Tk()
 root.title("Manga Downloader GUI")
-root.geometry("500x400")
+root.geometry("520x450")
+
+output_path_var = tk.StringVar()
+output_path_var.set(os.path.join(os.path.dirname(__file__), "output"))  # valeur par défaut
+
+def choisir_dossier():
+    selected = filedialog.askdirectory()
+    if selected:
+        output_path_var.set(selected)
 
 def lancer_telechargement():
     anime = entry_anime.get().strip()
@@ -108,7 +107,8 @@ def lancer_telechargement():
     try:
         start = int(entry_start.get())
         end = int(entry_end.get())
-        threading.Thread(target=downloadChaptersInRange, args=(start, end, anime_url, anime_clean, log)).start()
+        output_dir = output_path_var.get()
+        threading.Thread(target=downloadChaptersInRange, args=(start, end, anime_url, anime_clean, output_dir, log)).start()
     except ValueError:
         messagebox.showerror("Erreur", "Les chapitres doivent être des nombres.")
 
@@ -130,6 +130,12 @@ entry_start.grid(row=1, column=1, sticky="w", pady=5)
 tk.Label(frame, text="Chapitre de fin :").grid(row=2, column=0, sticky="e")
 entry_end = tk.Entry(frame, width=10)
 entry_end.grid(row=2, column=1, sticky="w", pady=5)
+
+# 🔽 Sélecteur de dossier
+tk.Label(frame, text="Dossier de sortie :").grid(row=3, column=0, sticky="e")
+entry_output = tk.Entry(frame, textvariable=output_path_var, width=30, state='readonly')
+entry_output.grid(row=3, column=1, padx=5, pady=5)
+tk.Button(frame, text="📁 Parcourir", command=choisir_dossier).grid(row=3, column=2)
 
 tk.Button(root, text="Télécharger", command=lancer_telechargement).pack(pady=10)
 
