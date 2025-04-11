@@ -1,5 +1,9 @@
-```markdown
 # 📚 Scan to PDF
+
+> ⚠️ **Disclaimer**  
+> Ce script est fourni **uniquement à des fins éducatives**.  
+> Son utilisation pour contourner des droits d’auteur ou accéder à du contenu protégé sans autorisation est **strictement interdite**.  
+> L’auteur du script **décline toute responsabilité** en cas d’usage inapproprié ou illégal.
 
 Un petit script Python pour **télécharger automatiquement des chapitres de mangas depuis anime-sama.fr** et les convertir **en fichiers PDF**, rangés proprement dans un dossier au nom du manga.
 
@@ -94,7 +98,5 @@ output/
 
 ## 📝 Licence
 
-Libre d’utilisation et de modification. Améliore-le à ta sauce !
-```
-
----
+Ce projet est libre d’utilisation et de modification dans un cadre **légal et éthique**.  
+Toute utilisation détournée est aux risques et périls de l'utilisateur, et **l’auteur décline toute responsabilité**.

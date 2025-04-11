@@ -9,8 +9,10 @@ import tempfile
 OUTPUT_PATH = os.path.join(os.path.dirname(__file__), "output")
 
 # Anime_Name avec '%20' pour l'URL, mais remplacement pour le nom du dossier
-Anime_Name = "Chainsaw%20man"
+# Anime_Name = "Chainsaw%20man"
 # Anime_Name = "Beastars"
+# Anime_Name = "Solo%20Leveling"
+Anime_Name = "Demon%20Slayer"
 Sanitized_Anime_Name = Anime_Name.replace("%20", " ")  # Remplacer %20 par un espace pour le nom du dossier
 
 # Utilitaire pour éviter les caractères illégaux dans les noms de fichiers/dossiers Windows
