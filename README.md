@@ -5,7 +5,7 @@
 > Son utilisation pour contourner des droits d’auteur ou accéder à du contenu protégé sans autorisation est **strictement interdite**.  
 > L’auteur du script **décline toute responsabilité** en cas d’usage inapproprié ou illégal.
 
-Un petit script Python pour **télécharger automatiquement des chapitres de mangas depuis anime-sama.fr** et les convertir **en fichiers PDF**, rangés proprement dans un dossier au nom du manga.
+Un petit script Python pour **télécharger automatiquement des chapitres de mangas depuis anime-sama.fr** et les convertir **en fichiers PDF**, rangés proprement dans un dossier au nom du manga. Une interface graphique Tkinter est désormais disponible, et un exécutable est fourni pour simplifier l’utilisation.
 
 ---
 
@@ -15,6 +15,8 @@ Un petit script Python pour **télécharger automatiquement des chapitres de man
 - Regroupe chaque chapitre dans un **fichier PDF**.
 - Range les PDF dans un dossier unique avec le **nom propre du manga** (espaces au lieu de `%20`).
 - Supprime les images après génération du PDF pour garder le dossier propre.
+- Interface graphique avec Tkinter pour une utilisation plus facile.
+- Un fichier exécutable (`.exe`) est disponible dans le dossier `dist` pour une utilisation sans installation préalable de Python.
 
 ---
 
@@ -32,13 +34,13 @@ Tu veux récupérer les chapitres 1 à 3 de *Chainsaw Man* :
    python main.py
    ```
 
-3. Il te demandera :
-   ```
-   Entrez le chapitre de début : 1
-   Entrez le chapitre de fin : 3
-   ```
+   Ou si tu utilises l'interface graphique :
 
-4. Résultat :
+   - Lance l'exécutable dans le dossier `dist/` ou ouvre `main.py` avec Python.
+   - Entrez les informations nécessaires dans l'interface (nom de l'anime, chapitre de début et de fin).
+   - Clique sur "Télécharger".
+
+3. Résultat :
    ```
    output/
    └── Chainsaw man/
@@ -51,16 +53,21 @@ Tu veux récupérer les chapitres 1 à 3 de *Chainsaw Man* :
 
 ## 🧰 Pré-requis
 
+Si tu utilises le script avec Python, voici les prérequis :
+
 - Python 3.10+
 - Modules Python :
   - `requests`
   - `img2pdf`
   - `PyPDF2`
+  - `tkinter`
 
 Installe-les rapidement :
 ```bash
 pip install requests img2pdf PyPDF2
 ```
+
+Si tu préfères utiliser l'exécutable, il te suffit de le lancer depuis le dossier `dist/` sans installation de Python.
 
 ---
 
@@ -68,7 +75,9 @@ pip install requests img2pdf PyPDF2
 
 ```
 Scan_To_PDF/
-├── main.py
+├── dist/                  # Contient l'exécutable (.exe)
+│   └── Scan_to_PDF.exe
+├── main.py                # Code source principal
 ├── output/                # Contient les PDFs, ignoré par Git
 │   └── Chainsaw man/
 │       ├── chapitre_1.pdf
@@ -93,6 +102,8 @@ output/
 - Le nom de l’anime doit utiliser **`%20` pour les espaces** dans l’URL (ex: `Solo%20Leveling`) ;
 - Ce `%20` est automatiquement converti en espace pour le nom du dossier local ;
 - Les images sont téléchargées temporairement puis supprimées après génération du PDF.
+- L'interface graphique Tkinter permet de lancer facilement le téléchargement en fournissant le nom de l'anime et les chapitres à télécharger.
+- Le fichier exécutable dans le dossier `dist` permet de l'utiliser sans avoir besoin de Python installé.
 
 ---
 
